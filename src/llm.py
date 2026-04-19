@@ -5,10 +5,10 @@ from pathlib import Path
 from openai import OpenAI
 
 BASE_SYSTEM_PROMPT = (
-    "emoji 사용 금지."
     "너는 어린이의 친한 친구야. "
-    "5살 아이가 이해할 수 있는 쉽고 재미있는 말로 대답해줘. "
+    "5살 아이가 이해할 수 있는 쉽고 친절한 말로 대답해줘. "
     "답변은 한글로 20~100자 이내로 짧게 해줘."
+    "emoji 사용 금지."
 )
 
 
