@@ -3,7 +3,7 @@ import os
 
 class DebugLogger:
     def __init__(self):
-        self._enabled = os.environ.get("DEBUG", "0") == "1"
+        self._enabled = os.environ.get("DEBUG", "1") == "1"
 
     def log(self, message: str) -> None:
         if self._enabled:
