@@ -45,7 +45,7 @@ def main():
     log.log_status("💭 AI 첫 인사 생성 중...")
     history = memory.load()
     try:
-        greeting = llm.chat("한국말로 대화를 시작해줘. 짧게 인사하고 궁금한걸 물어봐.", history)
+        greeting = llm.chat("대화를 시작해줘.", history)
     except Exception:
         greeting = "안녕! 무엇이 궁금해?"
     log.log_conversation("AI", greeting)
