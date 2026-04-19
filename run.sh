@@ -1,19 +1,12 @@
 #!/bin/bash
 set -e
 
-# Mac에서 처음 실행할 때 관리자 권한으로 재실행 (keyboard 라이브러리가 필요)
-if [[ "$OSTYPE" == "darwin"* ]] && [ "$EUID" -ne 0 ]; then
-    echo "[알림] Mac에서 keyboard 입력을 감지하려면 관리자 권한이 필요합니다."
-    sudo bash "$0" "$@"
-    exit $?
-fi
-
 if [ ! -f .env ]; then
     echo "[오류] .env 파일이 없습니다. .env.example 을 복사하여 API 키를 설정해주세요."
     exit 1
 fi
 
-# Mac 호환성: PortAudio 설치 (pyaudio 빌드를 위해 필요)
+# Mac 호환성: PortAudio 설치 (pyaudio 빌드를 위해 필요, sudo 전에 실행)
 if [[ "$OSTYPE" == "darwin"* ]]; then
     echo "[Mac 감지] PortAudio 설치 확인 중..."
     if ! command -v brew &> /dev/null; then
@@ -25,6 +18,13 @@ if [[ "$OSTYPE" == "darwin"* ]]; then
         echo "[설치] PortAudio 설치 중..."
         brew install portaudio
     fi
+fi
+
+# Mac에서 처음 실행할 때 관리자 권한으로 재실행 (keyboard 라이브러리가 필요)
+if [[ "$OSTYPE" == "darwin"* ]] && [ "$EUID" -ne 0 ]; then
+    echo "[알림] Mac에서 keyboard 입력을 감지하려면 관리자 권한이 필요합니다."
+    sudo bash "$0" "$@"
+    exit $?
 fi
 
 # venv 없으면 생성
