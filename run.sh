@@ -1,6 +1,13 @@
 #!/bin/bash
 set -e
 
+# Mac에서 처음 실행할 때 관리자 권한으로 재실행 (keyboard 라이브러리가 필요)
+if [[ "$OSTYPE" == "darwin"* ]] && [ "$EUID" -ne 0 ]; then
+    echo "[알림] Mac에서 keyboard 입력을 감지하려면 관리자 권한이 필요합니다."
+    sudo bash "$0" "$@"
+    exit $?
+fi
+
 if [ ! -f .env ]; then
     echo "[오류] .env 파일이 없습니다. .env.example 을 복사하여 API 키를 설정해주세요."
     exit 1
@@ -32,15 +39,4 @@ echo "[설치] 의존성 확인 중..."
 
 echo "KidVoice AI 시작 중..."
 export PYTHONUTF8=1
-
-# Mac에서 keyboard 라이브러리는 관리자 권한이 필요
-if [[ "$OSTYPE" == "darwin"* ]]; then
-    if [ "$EUID" -ne 0 ]; then
-        echo "[알림] Mac에서 keyboard 입력을 감지하려면 관리자 권한이 필요합니다."
-        sudo .venv/bin/python main.py "$@"
-    else
-        .venv/bin/python main.py "$@"
-    fi
-else
-    .venv/bin/python main.py "$@"
-fi
+.venv/bin/python main.py "$@"
