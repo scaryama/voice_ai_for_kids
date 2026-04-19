@@ -5,7 +5,7 @@ from dotenv import load_dotenv
 
 load_dotenv()
 
-from src.llm import LLMClient, SYSTEM_PROMPT
+from src.llm import LLMClient, BASE_SYSTEM_PROMPT
 from src.memory import ConversationMemory
 
 # 설정 로드
@@ -16,8 +16,8 @@ print("LLM 모델 초기화 중...")
 llm = LLMClient(config)
 print(f"✓ 모델: {config.get('llm_model', 'openrouter/elephant-alpha')}\n")
 
-print("📋 SYSTEM_PROMPT:")
-print(f"{SYSTEM_PROMPT}\n")
+print("📋 SYSTEM_PROMPT (+ BOOTSTRAP):")
+print(f"{llm._system_prompt}\n")
 
 # 테스트 1: Bootstrap + Memory 로드
 print("=" * 60)
@@ -34,7 +34,7 @@ print("테스트 2: Bootstrap 없이 질문")
 print("=" * 60)
 print("질문: 대화를 시작해줘.")
 t0 = time.time()
-response_no_bootstrap = llm.chat("사용자의 이름 말해봐", "")
+response_no_bootstrap = llm.chat("", "")
 elapsed = time.time() - t0
 print(f"응답: {response_no_bootstrap}")
 print(f"소요시간: {elapsed:.1f}초\n")
@@ -46,7 +46,7 @@ print("=" * 60)
 print(history)
 print("질문: 대화를 시작해줘.")
 t0 = time.time()
-response_with_bootstrap = llm.chat("사용자의 이름 말해봐", history)
+response_with_bootstrap = llm.chat("", history)
 elapsed = time.time() - t0
 print(f"응답: {response_with_bootstrap}")
 print(f"소요시간: {elapsed:.1f}초\n")

@@ -2,7 +2,7 @@ ptt_key: space
 max_duration: 30
 llm_model: openrouter/elephant-alpha
 tts_voice: ko-KR-SunHiNeural    # Edge TTS: 한국어 여성음 (5-7살 아이 느낌)
-tts_rate: "+10%"                   # Edge TTS: 속도 (null=기본속도, "+20%"=빠르게)
+tts_rate: null                   # Edge TTS: 속도 (null=기본속도, "+20%"=빠르게)
 tts_pitch: "+30Hz"               # Edge TTS: 피치 증가 (핵심)
 audio_device: null
 sample_rate: 16000

@@ -18,6 +18,7 @@ from src.debug import DebugLogger
 from src.memory import ConversationMemory
 from src.ptt import PTTHandler
 from src.audio import AudioRecorder
+from src.audio_logger import AudioLogger
 from src.stt import STTEngine
 from src.llm import LLMClient
 from src.tts import get_tts_engine
@@ -34,6 +35,7 @@ def main():
     memory = ConversationMemory()
     ptt = PTTHandler(config)
     recorder = AudioRecorder(config)
+    audio_logger = AudioLogger()
     tts = get_tts_engine("edge", config)
 
     log.log_status("KidVoice AI 시작 — Whisper 모델 로딩 중...")
@@ -45,7 +47,7 @@ def main():
     log.log_status("💭 AI 첫 인사 생성 중...")
     history = memory.load()
     try:
-        greeting = llm.chat("대화를 시작해줘.", history)
+        greeting = llm.chat("대화를 이어서 해줘.", history)
     except Exception:
         greeting = "안녕! 무엇이 궁금해?"
     log.log_conversation("AI", greeting)
@@ -54,7 +56,7 @@ def main():
     tts.speak(greeting)
 
     while True:
-        tts.speak("스페이스바를 누르면서 말해")
+        tts.speak("스페이스바 누르면서 말해줘")
         log.log_status("스페이스바를 기다리는 중...")
         ptt.wait_for_press()
 
@@ -66,7 +68,7 @@ def main():
             tts.speak_error()
             continue
 
-        tts.speak("Okay, 생각하고 말해줄께")
+        tts.speak("Okay")
         log.log_status("⏳ 음성 인식 중...")
         text = stt.transcribe(audio, sample_rate=config.get("sample_rate", 16000))
 
@@ -76,6 +78,7 @@ def main():
             continue
 
         log.log_conversation("아이", text)
+        audio_logger.save_user_audio(audio, text, sample_rate=config.get("sample_rate", 16000))
 
         log.log_status("💭 AI 생각 중...")
         history = memory.load()
