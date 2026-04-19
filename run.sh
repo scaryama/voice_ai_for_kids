@@ -6,8 +6,9 @@ if [ ! -f .env ]; then
     exit 1
 fi
 
-# Mac 호환성: PortAudio 설치 (pyaudio 빌드를 위해 필요, sudo 전에 실행)
-if [[ "$OSTYPE" == "darwin"* ]]; then
+# Mac 호환성: PortAudio 설치 (관리자 권한 전에만 실행, 일반 권한에서)
+# SUDO_USER가 없으면 일반 사용자 권한 (재실행되지 않은 상태)
+if [[ "$OSTYPE" == "darwin"* ]] && [ -z "$SUDO_USER" ]; then
     echo "[Mac 감지] PortAudio 설치 확인 중..."
     if ! command -v brew &> /dev/null; then
         echo "[오류] Homebrew가 설치되어 있지 않습니다. 다음 명령어를 실행하세요:"
