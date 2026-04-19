@@ -1,7 +1,7 @@
 """TTS 엔진 추상 기본 클래스"""
 from abc import ABC, abstractmethod
 
-ERROR_MESSAGE = "다시 한번 말해줘"
+ERROR_MESSAGE = "다시"
 
 
 class TTSEngineBase(ABC):

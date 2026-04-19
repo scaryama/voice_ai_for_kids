@@ -1,6 +1,8 @@
 keyboard
 sounddevice
-numpy
+soundfile
+pyttsx3
+numpy<2
 openai-whisper
 openai
 edge-tts
@@ -9,3 +11,6 @@ pyyaml
 python-dotenv
 pyaudio
 scipy
+torch==1.13.1
+torchvision==0.14.1
+torchaudio==0.13.1

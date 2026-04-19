@@ -9,6 +9,9 @@ if sys.stdout.encoding and sys.stdout.encoding.lower() != "utf-8":
     except Exception:
         pass
 
+import torch
+print(f"CUDA available: {torch.cuda.is_available()}")
+
 import yaml
 from dotenv import load_dotenv
 
