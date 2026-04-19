@@ -6,7 +6,7 @@ class PTTHandler:
         self._key = config.get("ptt_key", "space")
 
     def wait_for_press(self) -> bool:
-        keyboard.wait(self._key, suppress=False)
+        keyboard.wait(self._key, suppress=True)
         return True
 
     def is_pressed(self) -> bool:

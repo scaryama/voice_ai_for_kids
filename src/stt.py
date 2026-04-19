@@ -7,6 +7,22 @@ class STTEngine:
     def __init__(self, config: dict):
         """STT 엔진 초기화 (GPU 자동 감지)"""
         self._model = whisper.load_model("small")
+        # Mac silicon은 mps, 일반 CUDA는 cuda, 나머지는 cpu
+        if torch.backends.mps.is_available():
+            device = "mps"
+        elif torch.cuda.is_available():
+            device = "cuda"
+        else:
+            device = "cpu"
+
+        try:
+            self._model = self._model.to(device)
+        except (NotImplementedError, RuntimeError):
+            # MPS 호환성 문제 시 CPU로 폴백
+            print(f"[STT] {device} 호환성 문제, CPU로 변경")
+            device = "cpu"
+            self._model = self._model.to(device)
+
         print(f"[STT] Whisper device: {self._model.device}")
 
     def transcribe(self, audio: np.ndarray, sample_rate: int = 16000) -> Optional[str]:
@@ -23,7 +39,8 @@ class STTEngine:
         audio_padded = whisper.pad_or_trim(audio_mono)
         mel = whisper.log_mel_spectrogram(audio_padded).to(self._model.device)
 
-        options = whisper.DecodingOptions(language="ko", fp16=True)
+        use_fp16 = self._model.device.type in ("cuda", "mps")
+        options = whisper.DecodingOptions(language="ko", fp16=use_fp16)
         result = whisper.decode(self._model, mel, options)
         text = result.text.strip()
 

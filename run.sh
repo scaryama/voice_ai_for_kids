@@ -34,9 +34,13 @@ if [ ! -f .venv/bin/python ]; then
     python3 -m venv .venv
 fi
 
-# 의존성 설치
+# 의존성 설치 (플랫폼별)
 echo "[설치] 의존성 확인 중..."
-.venv/bin/pip install -q -r requirements.txt
+if [[ "$OSTYPE" == "darwin"* ]]; then
+    .venv/bin/pip install -q -r requirements_mac.txt
+else
+    .venv/bin/pip install -q -r requirements_win.txt
+fi
 
 echo "KidVoice AI 시작 중..."
 export PYTHONUTF8=1
