@@ -20,7 +20,7 @@ from src.ptt import PTTHandler
 from src.audio import AudioRecorder
 from src.stt import STTEngine
 from src.llm import LLMClient
-from src.tts import TTSEngine
+from src.tts import get_tts_engine
 
 
 def load_config(path: str = "config.yaml") -> dict:
@@ -34,7 +34,7 @@ def main():
     memory = ConversationMemory()
     ptt = PTTHandler(config)
     recorder = AudioRecorder(config)
-    tts = TTSEngine(config)
+    tts = get_tts_engine("edge", config)
 
     log.log_status("KidVoice AI 시작 — Whisper 모델 로딩 중...")
     stt = STTEngine(config)
