@@ -1,0 +1,6 @@
+ptt_key: space
+max_duration: 30
+llm_model: openrouter/elephant-alpha
+tts_voice: null
+audio_device: null
+sample_rate: 16000

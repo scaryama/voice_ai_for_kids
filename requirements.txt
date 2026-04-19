@@ -1,0 +1,9 @@
+keyboard
+sounddevice
+numpy
+openai-whisper
+openai
+pyttsx3
+pyyaml
+python-dotenv
+pyaudio
