@@ -41,9 +41,20 @@ def main():
     llm = LLMClient(config)
     log.log_status("모델 로드 완료")
 
-    tts.speak("스페이스바를 누르면서 말해")
+    # AI가 먼저 말하기 — BOOTSTRAP 컨텍스트 기반 첫 인사
+    log.log_status("💭 AI 첫 인사 생성 중...")
+    history = memory.load()
+    try:
+        greeting = llm.chat("한국말로 대화를 시작해줘. 짧게 인사하고 궁금한걸 물어봐.", history)
+    except Exception:
+        greeting = "안녕! 무엇이 궁금해?"
+    log.log_conversation("AI", greeting)
+    memory.append("ai", greeting)
+    log.log_status("🔊 AI 첫 인사 출력...")
+    tts.speak(greeting)
 
     while True:
+        tts.speak("스페이스바를 누르면서 말해")
         log.log_status("스페이스바를 기다리는 중...")
         ptt.wait_for_press()
 
@@ -55,10 +66,8 @@ def main():
             tts.speak_error()
             continue
 
-        tts.speak("Okay")
+        tts.speak("Okay, 생각하고 말해줄께")
         log.log_status("⏳ 음성 인식 중...")
-        if stt is None:
-            stt = STTEngine(config)
         text = stt.transcribe(audio, sample_rate=config.get("sample_rate", 16000))
 
         if not text:
@@ -69,9 +78,6 @@ def main():
         log.log_conversation("아이", text)
 
         log.log_status("💭 AI 생각 중...")
-        if llm is None:
-            llm = LLMClient(config)
-
         history = memory.load()
         memory.append("child", text)
         try:
@@ -91,7 +97,6 @@ def main():
 
         log.log_status("🔊 음성 출력 중...")
         tts.speak(answer)
-        tts.speak("스페이스바를 누르면서 말해")
 
 
 if __name__ == "__main__":
